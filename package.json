@@ -1,0 +1,26 @@
+{
+  "name": "three-particle-fire",
+  "version": "0.0.0",
+  "author": "Yomotsu",
+  "license": "MIT",
+  "main": "dist/three-particle-fire.js",
+  "repository": "yomotsu/three-particle-fire",
+  "jsnext:main": "dist/three-particle-fire.module.js",
+  "module": "dist/three-particle-fire.module.js",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "1.6.1",
+    "rollup": "^0.51.8",
+    "rollup-plugin-babel": "3.0.2",
+    "rollup-plugin-commonjs": "8.2.6",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-watch": "^4.3.1",
+    "uglify-js": "^3.1.10"
+  },
+  "scripts": {
+    "dev": "npm run watch",
+    "watch": "rollup --config --watch",
+    "build": "rollup --config",
+    "release": "rollup -c && uglifyjs dist/three-particle-fire.js -cm --preamble \"/*!\n * three-particle-fire\n * (c) 2017 @yomotsu\n * Released under the MIT License.\n */\" > dist/three-particle-fire.min.js"
+  }
+}

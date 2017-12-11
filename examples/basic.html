@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>=^.^=</title>
+<style>
+body{margin: 0; background: #333;}
+canvas{display: block;}
+</style>
+</head>
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.js"></script>
+<script src="../dist/three-particle-fire.js"></script>
+<script>
+//
+// prepare to use
+//
+particleFire.install( { THREE: THREE } );
+
+var width  = window.innerWidth,
+    height = window.innerHeight,
+    clock = new THREE.Clock(),
+    scene,
+    camera,
+    renderer,
+    loader = new THREE.JSONLoader(),
+    textureLoader = new THREE.TextureLoader();
+
+scene  = new THREE.Scene();
+scene.fog = new THREE.Fog( 0x333333, 8, 20 );
+camera = new THREE.PerspectiveCamera( 40, width / height, 0.1, 100 );
+camera.position.z = 5;
+renderer = new THREE.WebGLRenderer( { antialias: true } );
+renderer.setSize( width, height );
+renderer.setClearColor( 0x333333 );
+document.body.appendChild( renderer.domElement );
+
+scene.add( new THREE.DirectionalLight( 0xffffff ) );
+scene.add( new THREE.AmbientLight( 0x666666 ) );
+
+var fireRadius = 0.5;
+var fireHeight = 3;
+var particleCount = 700;
+var geometry0 = new particleFire.Geometry( fireRadius, fireHeight, particleCount );
+var material0 = new particleFire.Material( { color: 0xff2200 } );
+material0.setPerspective( camera.fov, height );
+var particleFireMesh0 = new THREE.Points( geometry0, material0 );
+scene.add( particleFireMesh0 );
+
+
+var geometry1 = new particleFire.Geometry( 0.5, 1, 400 );
+var material1 = new particleFire.Material( { color: 0x22ff00 } );
+material1.setPerspective( camera.fov, height );
+var particleFireMesh1 = new THREE.Points( geometry1, material1 );
+particleFireMesh1.position.set( -2, 0, 0 );
+scene.add( particleFireMesh1 );
+
+
+var geometry2 = new particleFire.Geometry( 0.25, 2, 300 );
+var material2 = new particleFire.Material( { color: 0x0022ff } );
+material2.setPerspective( camera.fov, height );
+var particleFireMesh2 = new THREE.Points( geometry2, material2 );
+particleFireMesh2.position.set(  2, 0, 0 );
+scene.add( particleFireMesh2 );
+
+
+
+var boxGeometry = new THREE.BoxGeometry( 1, 1, 1 );
+var boxMaterial = new THREE.MeshPhongMaterial( { color: 0x666666} );
+
+var box0 = new THREE.Mesh( boxGeometry, boxMaterial );
+box0.position.set( -2, -0.5, 0 );
+scene.add( box0 );
+
+var box1 = new THREE.Mesh( boxGeometry, boxMaterial );
+box1.position.set( 0, -0.5, 0 );
+scene.add( box1 );
+
+var box2 = new THREE.Mesh( boxGeometry, boxMaterial );
+box2.position.set( 2, -0.5, 0 );
+scene.add( box2 );
+
+var groundColor = textureLoader.load( 'grass_diffuse.png' );
+groundColor.repeat.set( 10, 10 );
+groundColor.wrapS = groundColor.wrapT = THREE.RepeatWrapping;
+
+var ground = new THREE.Mesh(
+	new THREE.PlaneBufferGeometry( 50, 50, 1, 1 ),
+	new THREE.MeshPhongMaterial( { map: groundColor } )
+);
+ground.position.y = -1;
+ground.rotation.x = THREE.Math.degToRad( -90 );
+scene.add( ground );
+
+
+( function update () {
+
+	var elapsed = clock.getElapsedTime();
+
+	// if ( elapsed > 30 ) { return; }
+
+	requestAnimationFrame( update );
+
+	particleFireMesh0.material.update( elapsed * 0.75 );
+	particleFireMesh1.material.update( elapsed );
+	particleFireMesh2.material.update( elapsed );
+
+	camera.position.set(
+		Math.sin( elapsed * 0.5 ) * 5,
+		Math.sin( elapsed * 0.5 ) * 3 + 3,
+		Math.cos( elapsed * 0.5 ) * 5
+	);
+	camera.lookAt( scene.position );
+	renderer.render( scene, camera );
+
+} )();
+
+
+window.addEventListener( 'resize', function () {
+
+	var width  = window.innerWidth;
+	var height = window.innerHeight;
+
+	camera.aspect = width / height;
+	camera.updateProjectionMatrix();
+	renderer.setSize( width, height );
+
+	particleFireMesh0.material.setPerspective( camera.fov, height );
+	particleFireMesh1.material.setPerspective( camera.fov, height );
+	particleFireMesh2.material.setPerspective( camera.fov, height );
+
+} );
+
+</script>
+
+</body>
+</html>
