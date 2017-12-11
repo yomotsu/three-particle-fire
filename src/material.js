@@ -32,9 +32,10 @@ export default function makeMaterialClass() {
 
 				'float PI = 3.14;',
 
-				'float qinticIn( float t ) {',
+				'float quadraticIn( float t ) {',
 
-					'return t * t * t * t * t;',
+					'float tt = t * t;',
+					'return tt * tt;',
 
 				'}',
 
@@ -42,7 +43,7 @@ export default function makeMaterialClass() {
 
 					'float progress = fract( time + ( 2.0 * randam - 1.0 ) );',
 					'float progressNeg = 1.0 - progress;',
-					'float ease = qinticIn( progress );',
+					'float ease = quadraticIn( progress );',
 					'float influence = sin( PI * ease );',
 
 					'vec3 newPosition = position * vec3( 1.0, ease, 1.0 );',
@@ -83,7 +84,7 @@ export default function makeMaterialClass() {
 		} );
 
 		this.color = new THREE.Color( 0xff2200 );
-		this.size  = 0.3;
+		this.size  = 0.4;
 		this.setValues( parameters );
 
 		this.uniforms.color.value = this.color;
@@ -93,9 +94,9 @@ export default function makeMaterialClass() {
 
 	Material.prototype = Object.create( THREE.ShaderMaterial.prototype );
 
-	Material.prototype.update = function( elapsed ) {
+	Material.prototype.update = function( delta ) {
 
-		this.uniforms.time.value = elapsed % 1;
+		this.uniforms.time.value = ( this.uniforms.time.value + delta ) % 1;
 
 	}
 

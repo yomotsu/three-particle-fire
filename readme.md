@@ -37,11 +37,11 @@ scene.add( particleFireMesh );
 ```javascript
 function update () {
 
-  var elapsed = clock.getElapsedTime();
+  var delta = clock.getDelta();
 
   requestAnimationFrame( update );
 
-  particleFireMesh0.material.update( elapsed );
+  particleFireMesh0.material.update( delta );
   renderer.render( scene, camera );
 
 }

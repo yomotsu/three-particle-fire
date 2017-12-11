@@ -41,7 +41,7 @@ scene.add( new THREE.AmbientLight( 0x666666 ) );
 
 var fireRadius = 0.5;
 var fireHeight = 3;
-var particleCount = 700;
+var particleCount = 400;
 var geometry0 = new particleFire.Geometry( fireRadius, fireHeight, particleCount );
 var material0 = new particleFire.Material( { color: 0xff2200 } );
 material0.setPerspective( camera.fov, height );
@@ -49,7 +49,7 @@ var particleFireMesh0 = new THREE.Points( geometry0, material0 );
 scene.add( particleFireMesh0 );
 
 
-var geometry1 = new particleFire.Geometry( 0.5, 1, 400 );
+var geometry1 = new particleFire.Geometry( 0.5, 1, 250 );
 var material1 = new particleFire.Material( { color: 0x22ff00 } );
 material1.setPerspective( camera.fov, height );
 var particleFireMesh1 = new THREE.Points( geometry1, material1 );
@@ -57,7 +57,7 @@ particleFireMesh1.position.set( -2, 0, 0 );
 scene.add( particleFireMesh1 );
 
 
-var geometry2 = new particleFire.Geometry( 0.25, 2, 300 );
+var geometry2 = new particleFire.Geometry( 0.25, 2, 150 );
 var material2 = new particleFire.Material( { color: 0x0022ff } );
 material2.setPerspective( camera.fov, height );
 var particleFireMesh2 = new THREE.Points( geometry2, material2 );
@@ -96,15 +96,16 @@ scene.add( ground );
 
 ( function update () {
 
+	var delta = clock.getDelta();
 	var elapsed = clock.getElapsedTime();
 
 	// if ( elapsed > 30 ) { return; }
 
 	requestAnimationFrame( update );
 
-	particleFireMesh0.material.update( elapsed * 0.75 );
-	particleFireMesh1.material.update( elapsed );
-	particleFireMesh2.material.update( elapsed );
+	particleFireMesh0.material.update( delta * 0.75 );
+	particleFireMesh1.material.update( delta );
+	particleFireMesh2.material.update( delta );
 
 	camera.position.set(
 		Math.sin( elapsed * 0.5 ) * 5,
