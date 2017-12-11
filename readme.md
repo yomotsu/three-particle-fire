@@ -13,7 +13,7 @@ Fire mesh object for three.js
 ## Usage
 
 1. Import your three.js and then prepare three-particle-fire to use.
-```
+```javascript
 import * as THREE from 'three';
 import particleFire from 'three-particle-fire';
 
@@ -21,7 +21,7 @@ particleFire.install( { THREE: THREE } );
 ```
 
 2. Now ready to use. particleFire will provide geometry and material for `THREE.Points` class.
-```
+```javascript
 var fireRadius = 0.5;
 var fireHeight = 3;
 var particleCount = 800;
@@ -34,7 +34,7 @@ scene.add( particleFireMesh );
 ```
 
 3. Update on tick in your render loop.
-```
+```javascript
 function update () {
 
   var elapsed = clock.getElapsedTime();
@@ -49,6 +49,7 @@ function update () {
 
 4. Sync on onresize event
 
+```javascript
 window.addEventListener( 'resize', function () {
 
   var width  = window.innerWidth;
@@ -61,3 +62,4 @@ window.addEventListener( 'resize', function () {
   particleFireMesh0.material.setPerspective( camera.fov, height );
 
 } );
+```
