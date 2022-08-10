@@ -11,7 +11,7 @@ export default function makeMaterialClass() {
 		const uniforms = {
 			color            : { type: "c", value: null },
 			size             : { type: "f", value: 0.0 },
-			texture          : { type: "t", value: getTexture() },
+			map              : { type: "t", value: getTexture() },
 			time             : { type: "f", value: 0.0 },
 			heightOfNearPlane: { type: "f", value: 0.0 }
 		};
@@ -58,7 +58,7 @@ export default function makeMaterialClass() {
 
 			fragmentShader: [
 				'uniform vec3 color;',
-				'uniform sampler2D texture;',
+				'uniform sampler2D map;',
 
 				'varying float vSprite;',
 				'varying float vOpacity;',
@@ -70,7 +70,7 @@ export default function makeMaterialClass() {
 						'gl_PointCoord.y',
 					');',
 
-					'gl_FragColor = vec4( texture2D( texture, vec2( texCoord ) ).xyz * color * vOpacity, 1.0 );',
+					'gl_FragColor = vec4( texture2D( map, texCoord ).xyz * color * vOpacity, 1.0 );',
 
 				'}'
 			].join( '\n' ),
