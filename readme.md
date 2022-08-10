@@ -25,12 +25,13 @@ particleFire.install( { THREE: THREE } );
 var fireRadius = 0.5;
 var fireHeight = 3;
 var particleCount = 800;
+var height = window.innerHeight;
 
 var geometry0 = new particleFire.Geometry( fireRadius, fireHeight, particleCount );
 var material0 = new particleFire.Material( { color: 0xff2200 } );
 material0.setPerspective( camera.fov, height );
 var particleFireMesh0 = new THREE.Points( geometry0, material0 );
-scene.add( particleFireMesh );
+scene.add( particleFireMesh0 );
 ```
 
 3. Update on tick in your render loop.
