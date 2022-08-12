@@ -1,9 +1,11 @@
-import nodeResolve from 'rollup-plugin-node-resolve'
-import commonjs    from 'rollup-plugin-commonjs'
-import babel       from 'rollup-plugin-babel'
+import nodeResolve from 'rollup-plugin-node-resolve';
+import commonjs    from 'rollup-plugin-commonjs';
+import babel       from 'rollup-plugin-babel';
+import pkg from './package.json';
 
 const license = `/*!
- * three-particle-fire
+	* ${ pkg.name }
+	* https://github.com/${ pkg.repository }
  * (c) 2017 @yomotsu
  * Released under the MIT License.
  */`
@@ -41,10 +43,7 @@ export default {
 			presets: [
 				[ 'env', {
 					targets: {
-						browsers: [
-							'last 2 versions',
-							'ie >= 11'
-						]
+						browsers: [ 'last 2 versions' ]
 					},
 					loose: true,
 					modules: false

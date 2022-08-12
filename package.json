@@ -8,14 +8,14 @@
   "jsnext:main": "dist/three-particle-fire.module.js",
   "module": "dist/three-particle-fire.module.js",
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-preset-env": "1.6.1",
-    "rollup": "^0.51.8",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "1.7.0",
+    "rollup": "^2.77.3",
     "rollup-plugin-babel": "3.0.2",
     "rollup-plugin-commonjs": "8.2.6",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-watch": "^4.3.1",
-    "uglify-js": "^3.1.10"
+    "uglify-js": "^3.16.3"
   },
   "scripts": {
     "dev": "npm run watch",
