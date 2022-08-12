@@ -5,43 +5,45 @@ export default function makeGeometryClass() {
 
 	const THREE = getInstalled( 'THREE' );
 
-	const Geometry = function Geometry( radius, height, particleCount ) {
+	return class Geometry {
 
-		const geometry = new THREE.BufferGeometry();
+		constructor( radius, height, particleCount ) {
 
-		const halfHeight = height * 0.5;
-		const position = new Float32Array( particleCount * 3 );
-		const randam   = new Float32Array( particleCount );
-		const sprite   = new Float32Array( particleCount );
+			const geometry = new THREE.BufferGeometry();
 
-		for ( let i = 0; i < particleCount; i ++ ) {
+			const halfHeight = height * 0.5;
+			const position = new Float32Array( particleCount * 3 );
+			const random   = new Float32Array( particleCount );
+			const sprite   = new Float32Array( particleCount );
 
-			const r     = Math.sqrt( Math.random() ) * radius;
-			const angle = Math.random() * 2 * Math.PI;
-			position[ i * 3 + 0 ] = Math.cos( angle ) * r;
-			position[ i * 3 + 1 ] = ( radius - r ) / radius * halfHeight + halfHeight;
-			position[ i * 3 + 2 ] = Math.sin( angle ) * r;
-			sprite[ i ] = ONE_SPRITE_ROW_LENGTH * ( ( Math.random() * 4 )|0 );
-			randam[ i ] = Math.random();
+			for ( let i = 0; i < particleCount; i ++ ) {
 
-			if ( i === 0 ) {
+				const r     = Math.sqrt( Math.random() ) * radius;
+				const angle = Math.random() * 2 * Math.PI;
+				position[ i * 3 + 0 ] = Math.cos( angle ) * r;
+				position[ i * 3 + 1 ] = ( radius - r ) / radius * halfHeight + halfHeight;
+				position[ i * 3 + 2 ] = Math.sin( angle ) * r;
+				sprite[ i ] = ONE_SPRITE_ROW_LENGTH * ( ( Math.random() * 4 )|0 );
+				random[ i ] = Math.random();
 
-				 // to avoid going out of Frustum
-				position[ i * 3 + 0 ] = 0;
-				position[ i * 3 + 1 ] = 0;
-				position[ i * 3 + 2 ] = 0;
+				if ( i === 0 ) {
+
+					// to avoid going out of Frustum
+					position[ i * 3 + 0 ] = 0;
+					position[ i * 3 + 1 ] = 0;
+					position[ i * 3 + 2 ] = 0;
+
+				}
 
 			}
 
+			geometry.setAttribute( 'position', new THREE.BufferAttribute( position, 3 ) );
+			geometry.setAttribute( 'random', new THREE.BufferAttribute( random, 1 ) );
+			geometry.setAttribute( 'sprite', new THREE.BufferAttribute( sprite, 1 ) );
+			return geometry;
+
 		}
 
-		geometry.setAttribute( 'position', new THREE.BufferAttribute( position, 3 ) );
-		geometry.setAttribute( 'randam', new THREE.BufferAttribute( randam, 1 ) );
-		geometry.setAttribute( 'sprite', new THREE.BufferAttribute( sprite, 1 ) );
-		return geometry;
-
 	}
-
-	return Geometry;
 
 }

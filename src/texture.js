@@ -2,12 +2,11 @@ import { getInstalled } from './install.js';
 
 let texture;
 
-export default function getTexture() {
+export function getTexture() {
 
 	if ( !! texture ) return texture;
 
 	const THREE = getInstalled( 'THREE' );
-
 	const image = new Image();
 
 	texture = new THREE.Texture();

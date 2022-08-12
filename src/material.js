@@ -1,114 +1,116 @@
 import { ONE_SPRITE_ROW_LENGTH } from './constants.js';
 import { getInstalled } from './install.js';
-import getTexture from './texture.js';
+import { getTexture } from './texture.js';
 
 export default function makeMaterialClass() {
 
 	const THREE = getInstalled( 'THREE' );
 
-	const Material = function Material( parameters ) {
+	return class Material {
 
-		const uniforms = {
-			color            : { type: "c", value: null },
-			size             : { type: "f", value: 0.0 },
-			map              : { type: "t", value: getTexture() },
-			time             : { type: "f", value: 0.0 },
-			heightOfNearPlane: { type: "f", value: 0.0 }
-		};
+		constructor( parameters ) {
 
-		const material = new THREE.ShaderMaterial({
+			const uniforms = {
+				color            : { value: null },
+				size             : { value: 0.0 },
+				map              : { value: getTexture() },
+				time             : { value: 0.0 },
+				heightOfNearPlane: { value: 0.0 }
+			};
 
-			uniforms      : uniforms,
+			const material = new THREE.ShaderMaterial({
 
-			vertexShader  : [
-				'attribute float randam;',
-				'attribute float sprite;',
-				'uniform float time;',
-				'uniform float size;',
-				'uniform float heightOfNearPlane;',
+				uniforms      : uniforms,
 
-				'varying float vSprite;',
-				'varying float vOpacity;',
+				vertexShader  : [
+					'attribute float random;',
+					'attribute float sprite;',
+					'uniform float time;',
+					'uniform float size;',
+					'uniform float heightOfNearPlane;',
 
-				'float PI = 3.14;',
+					'varying float vSprite;',
+					'varying float vOpacity;',
 
-				'float quadraticIn( float t ) {',
+					'float PI = 3.14;',
 
-					'float tt = t * t;',
-					'return tt * tt;',
+					'float quadraticIn( float t ) {',
 
-				'}',
+						'float tt = t * t;',
+						'return tt * tt;',
 
-				'void main() {',
+					'}',
 
-					'float progress = fract( time + ( 2.0 * randam - 1.0 ) );',
-					'float progressNeg = 1.0 - progress;',
-					'float ease = quadraticIn( progress );',
-					'float influence = sin( PI * ease );',
+					'void main() {',
 
-					'vec3 newPosition = position * vec3( 1.0, ease, 1.0 );',
-					'gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );',
-					'gl_PointSize = ( heightOfNearPlane * size ) / gl_Position.w;',
+						'float progress = fract( time + ( 2.0 * random - 1.0 ) );',
+						'float progressNeg = 1.0 - progress;',
+						'float ease = quadraticIn( progress );',
+						'float influence = sin( PI * ease );',
 
-					'vOpacity = min( influence * 4.0, 1.0 ) * progressNeg;',
-					'vSprite = sprite;',
+						'vec3 newPosition = position * vec3( 1.0, ease, 1.0 );',
+						'gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );',
+						'gl_PointSize = ( heightOfNearPlane * size ) / gl_Position.w;',
 
-				'}'
-			].join( '\n' ),
+						'vOpacity = min( influence * 4.0, 1.0 ) * progressNeg;',
+						'vSprite = sprite;',
 
-			fragmentShader: [
-				'uniform vec3 color;',
-				'uniform sampler2D map;',
+					'}'
+				].join( '\n' ),
 
-				'varying float vSprite;',
-				'varying float vOpacity;',
+				fragmentShader: [
+					'uniform vec3 color;',
+					'uniform sampler2D map;',
 
-				'void main() {',
+					'varying float vSprite;',
+					'varying float vOpacity;',
 
-					'vec2 texCoord = vec2(',
-						'gl_PointCoord.x * ' + ONE_SPRITE_ROW_LENGTH + ' + vSprite,',
-						'gl_PointCoord.y',
-					');',
+					'void main() {',
 
-					'gl_FragColor = vec4( texture2D( map, texCoord ).xyz * color * vOpacity, 1.0 );',
+						'vec2 texCoord = vec2(',
+							'gl_PointCoord.x * ' + ONE_SPRITE_ROW_LENGTH + ' + vSprite,',
+							'gl_PointCoord.y',
+						');',
 
-				'}'
-			].join( '\n' ),
+						'gl_FragColor = vec4( texture2D( map, texCoord ).xyz * color * vOpacity, 1.0 );',
 
-			blending   : THREE.AdditiveBlending,
-			depthTest  : true,
-			depthWrite : false,
-			transparent: true,
-			// fog        : true
+					'}'
+				].join( '\n' ),
 
-		} );
+				blending   : THREE.AdditiveBlending,
+				depthTest  : true,
+				depthWrite : false,
+				transparent: true,
+				// fog        : true
 
-		material.color = new THREE.Color(0xff2200);
-		material.size = 0.4;
+			} );
 
-		if ( parameters !== undefined ) {
-			material.setValues( parameters );
+			material.color = new THREE.Color( 0xff2200 );
+			material.size = 0.4;
+
+			if ( parameters !== undefined ) {
+				material.setValues( parameters );
+			}
+
+			material.uniforms.color.value = material.color;
+			material.uniforms.size.value = material.size;
+
+			material.update = function( delta ) {
+
+				material.uniforms.time.value = ( material.uniforms.time.value + delta ) % 1;
+
+			}
+
+			material.setPerspective = function( fov, height ) {
+
+				material.uniforms.heightOfNearPlane.value = Math.abs( height / ( 2 * Math.tan( THREE.MathUtils.degToRad( fov * 0.5 ) ) ) );
+
+			}
+
+			return material;
+
 		}
-
-		material.uniforms.color.value = material.color;
-		material.uniforms.size.value = material.size;
-
-		material.update = function( delta ) {
-
-			material.uniforms.time.value = ( material.uniforms.time.value + delta ) % 1;
-
-		}
-
-		material.setPerspective = function( fov, height ) {
-
-			material.uniforms.heightOfNearPlane.value = Math.abs( height / ( 2 * Math.tan( THREE.MathUtils.degToRad( fov * 0.5 ) ) ) );
-
-		}
-
-		return material;
 
 	}
-
-	return Material;
 
 }
