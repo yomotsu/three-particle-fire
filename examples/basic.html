@@ -10,7 +10,7 @@ canvas{display: block;}
 </head>
 <body>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.js"></script>
+<script src="https://unpkg.com/three@0.143.0/build/three.js"></script>
 <script src="../dist/three-particle-fire.js"></script>
 <script>
 //
@@ -24,7 +24,6 @@ var width  = window.innerWidth,
     scene,
     camera,
     renderer,
-    loader = new THREE.JSONLoader(),
     textureLoader = new THREE.TextureLoader();
 
 scene  = new THREE.Scene();
@@ -90,7 +89,7 @@ var ground = new THREE.Mesh(
 	new THREE.MeshPhongMaterial( { map: groundColor } )
 );
 ground.position.y = -1;
-ground.rotation.x = THREE.Math.degToRad( -90 );
+ground.rotation.x = THREE.MathUtils.degToRad( -90 );
 scene.add( ground );
 
 

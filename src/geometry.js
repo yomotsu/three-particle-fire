@@ -7,7 +7,7 @@ export default function makeGeometryClass() {
 
 	const Geometry = function Geometry( radius, height, particleCount ) {
 
-		THREE.BufferGeometry.call( this );
+		const geometry = new THREE.BufferGeometry();
 
 		const halfHeight = height * 0.5;
 		const position = new Float32Array( particleCount * 3 );
@@ -35,13 +35,12 @@ export default function makeGeometryClass() {
 
 		}
 
-		this.addAttribute( 'position', new THREE.BufferAttribute( position, 3 ) );
-		this.addAttribute( 'randam', new THREE.BufferAttribute( randam, 1 ) );
-		this.addAttribute( 'sprite', new THREE.BufferAttribute( sprite, 1 ) );
+		geometry.setAttribute( 'position', new THREE.BufferAttribute( position, 3 ) );
+		geometry.setAttribute( 'randam', new THREE.BufferAttribute( randam, 1 ) );
+		geometry.setAttribute( 'sprite', new THREE.BufferAttribute( sprite, 1 ) );
+		return geometry;
 
 	}
-
-	Geometry.prototype = Object.create( THREE.BufferGeometry.prototype );
 
 	return Geometry;
 

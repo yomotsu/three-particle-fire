@@ -11,12 +11,12 @@ export default function makeMaterialClass() {
 		const uniforms = {
 			color            : { type: "c", value: null },
 			size             : { type: "f", value: 0.0 },
-			texture          : { type: "t", value: getTexture() },
+			map              : { type: "t", value: getTexture() },
 			time             : { type: "f", value: 0.0 },
 			heightOfNearPlane: { type: "f", value: 0.0 }
 		};
 
-		THREE.ShaderMaterial.call( this, {
+		const material = new THREE.ShaderMaterial({
 
 			uniforms      : uniforms,
 
@@ -58,7 +58,7 @@ export default function makeMaterialClass() {
 
 			fragmentShader: [
 				'uniform vec3 color;',
-				'uniform sampler2D texture;',
+				'uniform sampler2D map;',
 
 				'varying float vSprite;',
 				'varying float vOpacity;',
@@ -70,7 +70,7 @@ export default function makeMaterialClass() {
 						'gl_PointCoord.y',
 					');',
 
-					'gl_FragColor = vec4( texture2D( texture, vec2( texCoord ) ).xyz * color * vOpacity, 1.0 );',
+					'gl_FragColor = vec4( texture2D( map, texCoord ).xyz * color * vOpacity, 1.0 );',
 
 				'}'
 			].join( '\n' ),
@@ -83,26 +83,29 @@ export default function makeMaterialClass() {
 
 		} );
 
-		this.color = new THREE.Color( 0xff2200 );
-		this.size  = 0.4;
-		this.setValues( parameters );
+		material.color = new THREE.Color(0xff2200);
+		material.size = 0.4;
 
-		this.uniforms.color.value = this.color;
-		this.uniforms.size.value  = this.size;
+		if ( parameters !== undefined ) {
+			material.setValues( parameters );
+		}
 
-	}
+		material.uniforms.color.value = material.color;
+		material.uniforms.size.value = material.size;
 
-	Material.prototype = Object.create( THREE.ShaderMaterial.prototype );
+		material.update = function( delta ) {
 
-	Material.prototype.update = function( delta ) {
+			material.uniforms.time.value = ( material.uniforms.time.value + delta ) % 1;
 
-		this.uniforms.time.value = ( this.uniforms.time.value + delta ) % 1;
+		}
 
-	}
+		material.setPerspective = function( fov, height ) {
 
-	Material.prototype.setPerspective = function( fov, height ) {
+			material.uniforms.heightOfNearPlane.value = Math.abs( height / ( 2 * Math.tan( THREE.MathUtils.degToRad( fov * 0.5 ) ) ) );
 
-		this.uniforms.heightOfNearPlane.value = Math.abs( height / ( 2 * Math.tan( THREE.Math.degToRad( fov * 0.5 ) ) ) );
+		}
+
+		return material;
 
 	}
 
